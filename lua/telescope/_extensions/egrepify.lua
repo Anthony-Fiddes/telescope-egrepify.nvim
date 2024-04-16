@@ -102,6 +102,7 @@ local egrep_picker = require "telescope._extensions.egrepify.picker"
 
 -- Initialize highlights
 vim.api.nvim_set_hl(0, "EgrepifyFile", { link = "Title", default = true })
+vim.api.nvim_set_hl(0, "EgrepifyDirectory", { link = "EgrepifyFile", default = true })
 vim.api.nvim_set_hl(0, "EgrepifySuffix", { link = "Comment", default = true })
 vim.api.nvim_set_hl(0, "EgrepifyLnum", { link = "Constant", default = true })
 vim.api.nvim_set_hl(0, "EgrepifyCol", { link = "Constant", default = true })

@@ -120,7 +120,7 @@ local function title_display(filename, _, opts)
         { { 0, offset }, hl_group },
         {
           { offset, end_dirname },
-          "Directory",
+          opts.directory_hl,
         },
         {
           { end_dirname, end_tail },
