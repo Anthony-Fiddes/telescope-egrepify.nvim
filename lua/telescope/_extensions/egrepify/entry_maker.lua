@@ -1,5 +1,6 @@
 local ts_utils = require "telescope.utils"
 local egrep_conf = require("telescope._extensions.egrepify.config").values
+local grepify_utils = require "telescope._extensions.egrepify.utils"
 
 local os_sep = require("plenary.path").path.sep
 local str = require "plenary.strings"
@@ -106,21 +107,27 @@ end
 
 local function title_display(filename, _, opts)
   local display_filename = ts_utils.transform_path({ cwd = opts.cwd }, filename)
+  local display_dirname, display_tail = grepify_utils.get_path_and_tail(display_filename, { show_sep = true })
   local suffix_ = opts.title_suffix or ""
   local display, hl_group = ts_utils.transform_devicons(display_filename, display_filename .. suffix_, false)
   local offset = find_whitespace(display)
-  local end_filename = offset + #display_filename
-  local end_suffix = end_filename + #opts.title_suffix
+  local end_dirname = offset + #display_dirname
+  local end_tail = end_dirname + #display_tail
+  local end_suffix = end_tail + #opts.title_suffix
   if hl_group then
     return display,
       {
         { { 0, offset }, hl_group },
         {
-          { offset, end_filename },
+          { offset, end_dirname },
+          "Directory",
+        },
+        {
+          { end_dirname, end_tail },
           opts.filename_hl,
         },
         suffix_ ~= "" and {
-          { end_filename, end_suffix },
+          { end_tail, end_suffix },
           opts.title_suffix_hl,
         } or nil,
       }
