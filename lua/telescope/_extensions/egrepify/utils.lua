@@ -109,4 +109,21 @@ M.permutations = function(tokens)
   return string.format("%s%s%s", "(", table.concat(result, "|"), ")")
 end
 
+---Get the tail of the path and the directory to display.
+---e.g. .config/nvim/init.lua -> .config/nvim, init.lua
+---@param file_path string
+---@param opts table
+---@return string directory # Directory path to display
+---@return string tail # The tail of the path (file name in most case).
+M.get_path_and_tail = function(file_path, opts)
+  local tail = require("telescope.utils").path_tail(file_path)
+  local path_without_tail = require("plenary.strings").truncate(file_path, #file_path - #tail, "")
+  if opts.show_sep then
+    return path_without_tail, tail
+  end
+
+  local directory = require("telescope.utils").transform_path({ path_display = { "truncate" } }, path_without_tail)
+  return directory, tail
+end
+
 return M

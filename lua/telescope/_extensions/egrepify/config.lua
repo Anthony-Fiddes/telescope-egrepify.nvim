@@ -19,6 +19,7 @@ _TelescopeEgrepifyConfig = {
   use_prefixes = true,
   title = true,
   filename_hl = "EgrepifyFile",
+  directory_hl = "EgrepifyFile",
   title_suffix = title_suffix,
   title_suffix_hl = "EgrepifySuffix",
   grep_open_files = false,

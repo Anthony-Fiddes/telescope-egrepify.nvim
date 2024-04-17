@@ -121,6 +121,7 @@ require("telescope").setup {
       col_hl = "EgrepifyCol",         -- default, not required, links to `Constant`
       title = true,                   -- default, not required, show filename as title rather than inline
       filename_hl = "EgrepifyFile",   -- default, not required, links to `Title`
+      directory_hl = "EgrepifyFile"   -- default, not required, links to `Title`
       -- suffix = long line, see screenshot
       -- EXAMPLE ON HOW TO ADD PREFIX!
       prefixes = {

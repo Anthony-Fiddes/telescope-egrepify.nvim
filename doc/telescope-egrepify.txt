@@ -115,6 +115,7 @@ PickerConfig                                                      *PickerConfig*
         {permutations}       (boolean)   search permutations of sub-tokens of prompt, implies AND true
         {prefixes}           (table)     prefixes for `rg` input, see |telescope-egrepify.prefix|
         {filename_hl}        (string)    hl for title (default: `EgrepifyFile` w/ link to `Title`)
+        {directory_hl}       (string)    hl for directory (default: link to `EgrepifyFile`)
         {title}              (boolean)   filename as title, false to inline (default: true)
         {title_suffix}       (string)    string after filename title, only if `title == true` (default: " " .. "──────────")
         {title_suffix_hl}    (string)    title suffix hl [`EgrepifySuffix`, links to `Comment`]

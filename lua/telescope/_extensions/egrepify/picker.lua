@@ -66,6 +66,7 @@ end
 ---@field permutations boolean search permutations of sub-tokens of prompt, implies AND true
 ---@field prefixes table prefixes for `rg` input, see |telescope-egrepify.prefix|
 ---@field filename_hl string hl for title (default: `EgrepifyFile` w/ link to `Title`)
+---@field directory_hl string hl for directory (default: link to `EgrepfyFile`)
 ---@field title boolean filename as title, false to inline (default: true)
 ---@field title_suffix string string after filename title, only if `title == true` (default: " " .. "──────────")
 ---@field title_suffix_hl string title suffix hl [`EgrepifySuffix`, links to `Comment`]
