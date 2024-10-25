@@ -7,6 +7,7 @@
 - Extensible prefix-based CLI parsing for `ripgrep`, e.g. by default `#md,lua sorter` would look for sorter in files with `md` or `lua` extensions
 - Better (opinionated) defaults like `AND` for tokens in prompt: `this here` expands to "this*.here" in regex matching this, any characters in between, __and__ here
 - Custom entry maker to parse `ripgrep` json to separate filenames as "section titles" (inspired by [consult.el](https://github.com/minad/consult)), configure line and column numbers, and perform accurate line highlighting
+- Opt-in results highlighting with treesitter (needs `results_ts_hl = true`)
 
 ## Motivation
 
@@ -122,6 +123,7 @@ require("telescope").setup {
       title = true,                   -- default, not required, show filename as title rather than inline
       filename_hl = "EgrepifyFile",   -- default, not required, links to `Title`
       directory_hl = "EgrepifyFile"   -- default, not required, links to `Title`
+      results_ts_hl = true,           -- set to false if you experience latency issues!
       -- suffix = long line, see screenshot
       -- EXAMPLE ON HOW TO ADD PREFIX!
       prefixes = {
@@ -171,4 +173,3 @@ Please consider forking for your own customization or well-formed PRs instead to
 Kudos to ChatGPT:
 
 > `egrepify` combines the concept of "grep" (a common Unix command for searching through files) with the word "Epsilon" (the fifth letter of the Greek alphabet, which can represent "my" in mathematical notation). The resulting word suggests a personalized or customized version of grep.
-

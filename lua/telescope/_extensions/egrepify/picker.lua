@@ -7,6 +7,7 @@ local sorters = require "telescope.sorters"
 local conf = require("telescope.config").values
 local egrep_conf = require("telescope._extensions.egrepify.config").values
 local actions = require "telescope.actions"
+local TSInjector = require "telescope._extensions.egrepify.treesitter"
 
 local flatten = vim.tbl_flatten
 
@@ -74,6 +75,7 @@ end
 ---@field lnum_hl string lnum hl [`EgrepifyLnum`, links to `Constant`]
 ---@field col boolean include col in result entry
 ---@field col_hl string col hl (default: `EgrepifyCol`, links to `Constant`)
+---@field results_ts_hl boolean highlight results entries with treesitter, may increase latency!
 ---@field sorting_strategy string see |telescope.defaults.sorting_strategy|, "descending" has slight perf. hit
 
 local Picker = {}
@@ -203,6 +205,68 @@ function Picker.picker(opts)
       return true
     end,
   })
+  local preview_fn = picker.previewer.preview
+  picker.previewer.preview = function(previewer, entry, status)
+    if entry then
+      if entry.kind ~= "begin" then
+        preview_fn(previewer, entry, status)
+      end
+    else
+      -- required to clear preview in case there is no entry
+      preview_fn(previewer, entry, status)
+    end
+  end
+  local entry_adder = picker.entry_adder
+  local regions = {}
+  picker.entry_adder = function(picker_, index, entry, _, insert)
+    entry_adder(picker_, index, entry, _, insert)
+    if not opts.results_ts_hl then
+      return
+    end
+
+    if not entry.kind == "match" then
+      return
+    end
+
+    local row = picker_:get_row(index)
+    local line_count = vim.api.nvim_buf_line_count(picker_.results_bufnr)
+    if row > line_count then
+      return
+    end
+    local line = vim.api.nvim_buf_get_lines(picker_.results_bufnr, row, row + 1, false)[1]
+    local ft = vim.filetype.match { filename = entry.filename }
+    if ft == nil then
+      return
+    end
+    if regions[ft] == nil then
+      regions[ft] = {}
+    end
+
+    if entry.text then
+      local first_pos = string.find(line, entry.text, 1, true)
+      if first_pos == nil then
+        return
+      end
+      first_pos = first_pos - 1
+      -- clear row for FT that used to be in that row
+      table.insert(regions[ft], { { row, first_pos, row, line:len() } })
+      TSInjector.attach(picker_.results_bufnr, regions)
+    end
+  end
+
+  -- invalidate regions after every keystroke
+  local on_input_filter_cb = picker._on_input_filter_cb
+  picker._on_input_filter_cb = function(prompt)
+    regions = {}
+    return on_input_filter_cb(prompt)
+  end
+
+  -- "refreshes" results buffer without retriggering `rg` unlike picker:refresh()
+  -- when `rg` is finished
+  table.insert(picker._completion_callbacks, function()
+    picker:set_selection(picker:get_selection_row())
+  end)
+
   -- caching opts to be able to remove `title` from opts for entry maker for fuzzy refine
   picker._opts = opts
   picker.use_prefixes = vim.F.if_nil(opts.use_prefixes, egrep_conf.use_prefixes)
