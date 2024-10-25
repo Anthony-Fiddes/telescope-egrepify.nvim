@@ -1,3 +1,6 @@
+This is a fork of a fork so that I can use a patch that I noticed someone made
+that allows you to toggle the showing of hidden files.
+
 # telescope-egrepify.nvim
 
 `telescope-egrepify.nvim` is a [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim)-extension that enhances live grepping with opinionated defaults and functionality.
